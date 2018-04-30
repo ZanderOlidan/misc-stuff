@@ -8,6 +8,25 @@ const PATH_BASE = 'http://hn.algolia.com/api/v1';
 const PATH_SEARCH = '/search';
 const PARAM_SEARCH = 'query=';
 
+const list = [
+  {
+    title: 'React',
+    url: 'https://facebook.github.io/react',
+    author: 'Jordan Walke',
+    num_comments: 3,
+    points: 4,
+    objectID: 0
+  },
+  {
+    title: 'Redux',
+    url: 'https://github.com/reactjs/redux',
+    author: 'Dan Abramove, Andrew Clark',
+    num_comments: 2,
+    points: 5,
+    objectID: 1
+  },
+]
+
 const greet = "G'day Mate. It's React, mate";
 
 const isSearched = (searchTerm) => 
@@ -20,9 +39,9 @@ class App extends Component {
     super(props);
 
     this.state = {
+      list,
       greet,
-      result: null,
-      searchTerm: DEFAULT_QUERY
+      searchTerm: ''
     }
     // Constructor to bind vars to component
     this.onDismiss = this.onDismiss.bind(this);
@@ -31,32 +50,18 @@ class App extends Component {
 
   onDismiss(id) {
     const updatedList = 
-      this.state.result.hits.filter (item => item.objectID !== id)
+      this.state.list.filter (item => item.objectID !== id)
     this.setState({ list: updatedList})
   }
 
-  setSearchTopStories = (result) => this.setState({result});
   onSearchChange = (event) => this.setState({ searchTerm: event.target.value})
-  
-  componentDidMount() {
-    const {searchTerm} = this.state;
-
-    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
-      .then(res => res.json())
-      .then(response => this.setSearchTopStories(response))
-      .catch(err => console.log(err))
-  }
-
 
   render() {
     const { 
       searchTerm,
       list, 
-      greet,
-      result
+      greet
     } = this.state;
-
-    if (!result) { return null}
     return (
       <div className="page">
         <div className="interactions">
@@ -70,7 +75,7 @@ class App extends Component {
           </Search>
         </div>
         <Table 
-          list={result.hits}
+          list={list}
           pattern={searchTerm}
           onDismiss={this.onDismiss}
         />
