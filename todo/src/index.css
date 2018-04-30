@@ -1,0 +1,12 @@
+#root {
+    width: 500px;
+    margin: 0 auto;
+}
+
+.content {
+    width: 100%;
+}
+
+.heading h1 {
+    text-align: center;
+}
